@@ -4,8 +4,28 @@
     <van-nav-bar title="登录" />
     <!-- 输入框 -->
     <van-cell-group>
-      <van-field v-model="user.mobile" left-icon="phone-o" placeholder="请输入手机号码" />
-      <van-field v-model="user.code" left-icon="star-o" placeholder="请输入验证码">
+      <!-- 使用VeeValidate
+        1. 通过v-validate 设置验证的规则
+        2. 设置文本框的name属性
+        3. 展示验证错误信息
+       -->
+      <van-field
+      v-validate="'required|digits:11'"
+      name="mobile"
+      :error-message="errors.first('mobile')"
+      v-model="user.mobile"
+      clearable
+      left-icon="phone-o"
+      placeholder="请输入手机号码"
+    />
+      <van-field
+        v-validate="'required|digits:6'"
+        name="code"
+        :error-message="errors.first('code')"
+        v-model="user.code"
+        left-icon="star-o"
+        placeholder="请输入验证码"
+      >
         <van-button slot="button" type="default" size="small">发送验证码</van-button>
       </van-field>
     </van-cell-group>
@@ -18,6 +38,7 @@
 
 <script>
 import { login } from '@/api/user'
+import { mapMutations } from 'vuex'
 
 export default {
   data () {
@@ -29,16 +50,21 @@ export default {
     }
   },
   methods: {
+    ...mapMutations(['setUser']),
     // 点击登录事件
     async handleLogin () {
       try {
         const data = await login(this.user)
         // 存储登录的状态
+        // 1.vuex
+        // this.$store.commit('setUser', data)
+        // 2.本地存储
+        // 以上 1 - 2 两件事都是在store中完成
+        this.setUser(data)
         // 跳转首页
         this.$router.push('/')
         // 成功提示
         this.$toast.success('登录成功')
-        console.log(data)
       } catch (err) {
         // 失败提示
         this.$toast.fail('登录失败')
