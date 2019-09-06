@@ -77,25 +77,27 @@ export default {
     async handleLogin () {
       try {
         // 表单验证
-        this.$validator.validate().then(async valid => {
-          // 验证失败
-          if (!valid) {
-            // do stuff if not valid.
-            return
-          }
-          // 验证成功
-          const data = await login(this.user)
-          // 存储登录的状态
-          // 1.vuex
-          // this.$store.commit('setUser', data)
-          // 2.本地存储
-          // 以上 1 - 2 两件事都是在store中完成
-          this.setUser(data)
-          // 跳转首页
-          this.$router.push('/')
-          // 成功提示
-          this.$toast.success('登录成功')
-        })
+        // this.$validator.validate().then(async valid => {
+        // validate() 返回的是promise对象，所以可以使用await调用 [优化validate()调用]
+        const valid = await this.$validator.validate()
+        // 验证失败
+        if (!valid) {
+          // do stuff if not valid.
+          return
+        }
+        // 验证成功
+        const data = await login(this.user)
+        // 存储登录的状态
+        // 1.vuex
+        // this.$store.commit('setUser', data)
+        // 2.本地存储
+        // 以上 1 - 2 两件事都是在store中完成
+        this.setUser(data)
+        // 跳转首页
+        this.$router.push('/')
+        // 成功提示
+        this.$toast.success('登录成功')
+        // })
       } catch (err) {
         // 失败提示
         this.$toast.fail('登录失败')
