@@ -32,7 +32,9 @@ instance.interceptors.request.use(function (config) {
 // Add a response interceptor === 添加响应拦截器
 instance.interceptors.response.use(function (response) {
   // Do something with response data === 处理响应数据
-  return response
+  // 接口返回的数据中都有data，此处统一返回接口返回的data
+  // 如果接口返回的数据中没有data，此时返回axios响应对象的data属性
+  return response.data.data || response.data
 }, function (error) {
   // Do something with response error === 处理响应错误
   return Promise.reject(error)
