@@ -53,7 +53,7 @@
     <!-- 弹出层组件 - 不感兴趣 -->
     <more-action v-model="showMoreAction" v-if="currentArticle" :article="currentArticle"></more-action>
     <!-- 举报弹出层 -->
-    <channels-edit :channels="channels" v-model="showChannelEdit"></channels-edit>
+    <channels-edit :active="activeIndex" :channels="channels" v-model="showChannelEdit"></channels-edit>
   </div>
 </template>
 

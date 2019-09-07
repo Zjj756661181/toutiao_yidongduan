@@ -20,7 +20,13 @@
     <!-- 推荐频道 -->
     <van-cell title="推荐频道" label="点击添加频道" />
     <van-grid>
-      <van-grid-item v-for="channel in channels" :key="channel.id" :text="channel.name" />
+      <van-grid-item v-for="(channel,index) in channels" :key="channel.id">
+        <div
+          slot="text"
+          class="van-grid-item__text"
+          :class="{ active: active === index }"
+        >{{ channel.name }}</div>
+      </van-grid-item>
     </van-grid>
   </van-popup>
 </template>
@@ -39,6 +45,11 @@ export default {
     channels: {
       type: Array,
       required: true
+    },
+    // 接收当前显示的频道的索引
+    active: {
+      type: Number,
+      required: true
     }
   },
   data () {
@@ -55,12 +66,12 @@ export default {
     recommendChannels () {
       // 1.获取我的频道中所有id组成的数组
       // map()遍历数组，返回一个新的数组，新数组中的元素由回调函数中返回的元素组成
-      const ids = this.channels.map((channel) => {
+      const ids = this.channels.map(channel => {
         return channel.id
       })
       // 2.filter() 过滤所有频道，把频道id重复出现的项去掉
       // filter() 把满足条件的item，返回组成一个新的数组
-      return this.allChannels.filter((channel) => {
+      return this.allChannels.filter(channel => {
         // includes() es6新增，判断数组中是否包含某一项
         return !ids.includes(channel.id)
       })
@@ -90,5 +101,8 @@ export default {
   position: absolute;
   right: 0;
   top: 0;
+}
+.active {
+  color: red;
 }
 </style>
