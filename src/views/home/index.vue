@@ -5,7 +5,7 @@
     <!-- 频道列表 -->
     <van-tabs animated v-model="activeIndex">
       <!--单击按钮 弹出 频道弹层  -->
-      <!-- <van-icon slot="nav-right" name="wap-nav" @click="showChannelsEdit=true"/> -->
+      <van-icon slot="nav-right" name="wap-nav" @click="showChannelsEdit=true"/>
       <!-- 频道标签 == 遍历循环 tab 标签页，显示频道列表 -->
       <van-tab type="line" v-for="channel in channels" :title="channel.name" :key="channel.id">
         <!-- 下拉刷新 -->
@@ -53,14 +53,16 @@
     <!-- 弹出层组件 - 不感兴趣 -->
     <more-action v-model="showMoreAction" v-if="currentArticle" :article="currentArticle"></more-action>
     <!-- 举报弹出层 -->
-    <channels-edit ></channels-edit>
+    <channels-edit v-model="showChannelEdit"></channels-edit>
   </div>
 </template>
 
 <script>
 import { getUserChannels } from '@/api/channel'
 import { getArticles } from '@/api/articles'
+// 加载moreaction组件
 import MoreAction from '../components/MoreAction'
+// 导入频道管理的组件
 import ChannelsEdit from '../components/ChannelsEdit'
 import { getItem, setItem } from '@/utils/localStorage'
 // Loading 加载 需引入
@@ -88,7 +90,9 @@ export default {
       // 弹层隐藏
       showMoreAction: false,
       // 点击x的时候，记录的当前文章对象
-      currentArticle: null
+      currentArticle: null,
+      // 控制频道管理的弹出层显示隐藏
+      showChannelEdit: false
     }
   },
   created () {
@@ -233,5 +237,13 @@ export default {
 }
 .close {
   float: right;
+}
+.nav-btn {
+  position: fixed;
+  right: 10px;
+  line-height: 44px;
+  background-color: #fff;
+  opacity: 0.8;
+  font-size: 22px;
 }
 </style>
