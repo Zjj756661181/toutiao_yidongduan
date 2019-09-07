@@ -42,7 +42,7 @@
                   <span>{{ article.comm_count }}评论</span>&nbsp;
                   <span>{{ article.pubdate | fmtDate }}</span>&nbsp;
                   <!-- x 图标 -->
-                  <van-icon name="cross" class="close" />
+                  <van-icon name="cross" class="close" @click="showMoreAction=true"/>
                 </p>
               </div>
             </van-cell>
@@ -51,9 +51,9 @@
       </van-tab>
     </van-tabs>
     <!-- 弹出层组件 - 不感兴趣 -->
-    <more-action></more-action>
+    <more-action v-model="showMoreAction"></more-action>
     <!-- 举报弹出层 -->
-    <channels-edit></channels-edit>
+    <channels-edit ></channels-edit>
   </div>
 </template>
 
@@ -83,7 +83,9 @@ export default {
       // 频道列表
       channels: [],
       // 下拉刷新成功后提示
-      successText: ''
+      successText: '',
+      // 弹层隐藏
+      showMoreAction: false
     }
   },
   created () {

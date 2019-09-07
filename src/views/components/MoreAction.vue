@@ -4,7 +4,7 @@
     value 是通过props传递，是单项的
     当dialog组件中input事件触发，说明要去更改value
     @input="handleInput(i)" -->
-    <van-dialog v-model="show" :showConfirmButton="false" closeOnClickOverlay>
+    <van-dialog :value="value" @input="$emit('input',$event)" :showConfirmButton="false" closeOnClickOverlay>
       <!-- 弹层组件 不感兴趣 -->
       <van-cell-group v-show="!showReports">
         <van-cell title="不感兴趣" icon="location-o" />
@@ -25,9 +25,15 @@
 <script>
 export default {
   name: 'MoreAction',
+  props: {
+    value: {
+      type: Boolean,
+      required: true
+    }
+  },
   data () {
     return {
-      show: true,
+      // show: true,
       showReports: false
     }
   }
