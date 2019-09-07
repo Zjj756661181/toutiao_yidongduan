@@ -29,6 +29,11 @@ export default {
     value: {
       type: Boolean,
       required: true
+    },
+    // 接收父组件给子组件传递的对象
+    article: {
+      type: Object,
+      required: true
     }
   },
   data () {

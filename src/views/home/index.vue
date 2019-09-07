@@ -41,8 +41,8 @@
                   <span>{{ article.aut_name }}</span>&nbsp;
                   <span>{{ article.comm_count }}评论</span>&nbsp;
                   <span>{{ article.pubdate | fmtDate }}</span>&nbsp;
-                  <!-- x 图标 -->
-                  <van-icon name="cross" class="close" @click="showMoreAction=true"/>
+                  <!-- 点击x按钮，记录当前的文章对象 -->
+                  <van-icon name="cross" class="close" @click="handleAction(article)" />
                 </p>
               </div>
             </van-cell>
@@ -51,7 +51,7 @@
       </van-tab>
     </van-tabs>
     <!-- 弹出层组件 - 不感兴趣 -->
-    <more-action v-model="showMoreAction"></more-action>
+    <more-action v-model="showMoreAction" v-if="currentArticle" :article="currentArticle"></more-action>
     <!-- 举报弹出层 -->
     <channels-edit ></channels-edit>
   </div>
@@ -85,7 +85,9 @@ export default {
       // 下拉刷新成功后提示
       successText: '',
       // 弹层隐藏
-      showMoreAction: false
+      showMoreAction: false,
+      // 点击x的时候，记录的当前文章对象
+      currentArticle: null
     }
   },
   created () {
@@ -176,6 +178,11 @@ export default {
         // 文章加载完毕 finished(加载成功)改为true
         this.currentChannel.finished = true
       }
+    },
+    // 点击 x 时 显示不感兴趣弹框 获取当前文章内容
+    handleAction (article) {
+      this.showMoreAction = true
+      this.currentArticle = article
     }
   }
 }
