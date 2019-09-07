@@ -5,7 +5,7 @@
     <!-- 频道列表 -->
     <van-tabs animated>
       <!-- 频道标签 -->
-      <van-tab v-for="channel in channels" :title="'channel.name'" :key="channel.id">
+      <van-tab v-for="channel in channels" :title="channel.name" :key="channel.id">
         <!-- 文章列表,不同的标签页下有不同的列表 -->
         <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="onLoad">
           <van-cell v-for="item in list" :key="item" :title="item" />
@@ -67,20 +67,35 @@ export default {
 <style lang="less" scoped>
 // 在scoped中书写的样式，动态生成的标签或者子组件中不可用
 // 深度作用选择器   /deep/
+// .van-tabs /deep/ .van-tabs__content {
+//   margin-top: 46px;
+//   margin-bottom: 50px;
+//   .van-tabs {
+//     /deep/ .van-tabs__wrap {
+//       position: fixed;
+//       top: 46px;
+//       left: 0;
+//       z-index: 100;
+//     }
+//     /deep/ .van-tabs__content {
+//       margin-top: 90px;
+//       margin-bottom: 50px;
+//     }
+//   }
+// }
+// --------------------------------------------------
+.van-tabs /deep/ .van-tabs__wrap {
+  position: fixed;
+  top: 46px;
+  left: 0;
+  right: 16px;
+  z-index: 2;
+}
 .van-tabs /deep/ .van-tabs__content {
-  margin-top: 46px;
+  margin-top: 90px;
   margin-bottom: 50px;
-  .van-tabs {
-    /deep/ .van-tabs__wrap {
-      position: fixed;
-      top: 46px;
-      left: 0;
-      z-index: 100;
-    }
-    /deep/ .van-tabs__content {
-      margin-top: 90px;
-      margin-bottom: 50px;
-    }
-  }
+}
+.close {
+  float: right;
 }
 </style>
