@@ -50,12 +50,18 @@
         </van-pull-refresh>
       </van-tab>
     </van-tabs>
+    <!-- 弹出层组件 - 不感兴趣 -->
+    <more-action></more-action>
+    <!-- 举报弹出层 -->
+    <channels-edit></channels-edit>
   </div>
 </template>
 
 <script>
 import { getUserChannels } from '@/api/channel'
 import { getArticles } from '@/api/articles'
+import MoreAction from '../components/MoreAction'
+import ChannelsEdit from '../components/ChannelsEdit'
 // Loading 加载 需引入
 import Vue from 'vue'
 import { Lazyload } from 'vant'
@@ -82,6 +88,10 @@ export default {
   },
   created () {
     this.getChannelsList()
+  },
+  components: {
+    MoreAction,
+    ChannelsEdit
   },
   computed: {
     // 返回当前频道对象
