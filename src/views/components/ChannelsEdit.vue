@@ -6,7 +6,7 @@
     :style="{ height: '90%' }"
   >
     <van-cell icon="cross" @click="$emit('input', false)" />
-    <!-- 我的频道 -->
+    <!-- 我的频道 --------------------------- -->
     <van-cell title="我的频道" label="点击进入频道">
       <van-button
         round
@@ -18,24 +18,29 @@
       <van-button round type="danger" size="mini" v-show="isEdit" @click="isEdit=false">完成</van-button>
     </van-cell>
     <van-grid>
-      <van-grid-item v-for="channel in recommendChannels" :key="channel.id" :text="channel.name">
-        <!-- 关闭按钮 -->
-        <van-icon slot="icon" class="close-icon" name="close" />
-      </van-grid-item>
-    </van-grid>
-    <!-- 推荐频道 -->
-    <van-cell title="推荐频道" label="点击添加频道" />
-    <van-grid>
+      <!-- 我的频道列表 -->
       <van-grid-item
-        v-for="(channel,index) in channels"
-        :key="channel.id"
-        @click="handleMyChannelItem(index,channel.id)"
-      >
-        <div
-          slot="text"
+      v-for="channel in recommendChannels"
+      :key="channel.id"
+       @click="handleMyChannelItem(index,channel.id)">
+       <div slot="text"
           class="van-grid-item__text"
           :class="{ active: active === index }"
         >{{ channel.name }}</div>
+        <!-- 关闭按钮 ------------ -->
+        <van-icon slot="icon" class="close-icon" name="close" />
+      </van-grid-item>
+    </van-grid>
+    <!-- 推荐频道 ------------------------- -->
+    <van-cell title="推荐频道" label="点击添加频道" />
+    <van-grid>
+      <!-- 推荐频道列表 -->
+      <van-grid-item
+       @click="handleChannelItem(channel)"
+        v-for="channel in recommendChannels"
+        :key="channel.id"
+        :text="channel.name"
+      >
       </van-grid-item>
     </van-grid>
   </van-popup>
@@ -127,6 +132,18 @@ export default {
         return
       }
       // 2.4 没有登陆，把频道列表记录到本地存储
+      setItem('channels', this.channels)
+    },
+    // 点击推荐频道时 将channel添加到我的频道 -------
+    handleChannelItem (channel) {
+      // 1. 把channel添加到我的频道
+      this.channels.push(channel)
+      // 2. 判断是否登录
+      if (this.user) {
+        // 3. 如果登录，发送请求
+        return
+      }
+      // 4. 如果没有登录，把我的频道存储到本地存储
       setItem('channels', this.channels)
     }
   }
