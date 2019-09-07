@@ -8,7 +8,13 @@
     <van-cell icon="cross" @click="$emit('input', false)" />
     <!-- 我的频道 -->
     <van-cell title="我的频道" label="点击进入频道">
-      <van-button round type="danger" size="mini" v-show="!isEdit && index !== 0" @click="isEdit=true">编辑</van-button>
+      <van-button
+        round
+        type="danger"
+        size="mini"
+        v-show="!isEdit && index !== 0"
+        @click="isEdit=true"
+      >编辑</van-button>
       <van-button round type="danger" size="mini" v-show="isEdit" @click="isEdit=false">完成</van-button>
     </van-cell>
     <van-grid>
@@ -20,7 +26,11 @@
     <!-- 推荐频道 -->
     <van-cell title="推荐频道" label="点击添加频道" />
     <van-grid>
-      <van-grid-item v-for="(channel,index) in channels" :key="channel.id" @click="handleMyChannelItem(index)">
+      <van-grid-item
+        v-for="(channel,index) in channels"
+        :key="channel.id"
+        @click="handleMyChannelItem(index,channel.id)"
+      >
         <div
           slot="text"
           class="van-grid-item__text"
@@ -32,7 +42,7 @@
 </template>
 
 <script>
-import { getAllChannels } from '@/api/channel'
+import { getAllChannels, deleteChannel } from '@/api/channel'
 import { mapState } from 'vuex'
 import { setItem } from '@/utils/localStorage'
 
@@ -96,7 +106,7 @@ export default {
       }
     },
     // 点击我的频道传值父组件 ----------------------
-    handleMyChannelItem (index) {
+    async handleMyChannelItem (index, channelId) {
       // 1.非编辑模式
       if (!this.isEdit) {
         // 传值父组件 选中的index
@@ -109,6 +119,11 @@ export default {
       // 通过mapstate作了映射
       if (this.user) {
         // 2.3 如果登录，发送请求
+        try {
+          await deleteChannel(channelId)
+        } catch (error) {
+          this.$toast.fail('操作失败')
+        }
         return
       }
       // 2.4 没有登陆，把频道列表记录到本地存储
