@@ -9,7 +9,7 @@
       <!-- 频道标签 -->
       <van-tab v-for="channel in channels" :title="channel.name" :key="channel.id">
         <!-- 上拉刷新事件 -->
-        <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="onLoad">
+        <van-list v-model="channel.loading" :finished="channel.finished" finished-text="没有更多了" @load="onLoad">
           <!-- 文章列表,不同的标签页下有不同的列表 -->
           <van-cell v-for="article in currentChannel.articles" :key="article.art_id.toString()" :title="article.title" >
           </van-cell>
@@ -30,10 +30,10 @@ export default {
       activeIndex: 0,
       // 列表
       list: [],
-      // 上拉显示加载 默认不显示
-      loading: false,
-      // 上拉加载完成显示加载成功 默认不显示
-      finished: false,
+      // // 上拉显示加载 默认不显示
+      // loading: false,
+      // // 上拉加载完成显示加载成功 默认不显示
+      // finished: false,
       // 频道列表
       channels: []
     }
@@ -61,6 +61,10 @@ export default {
           channel.timestamp = null
           // 文章列表
           channel.articles = []
+          // 上拉加载中 -- 默认不显示
+          channel.loading = false
+          // 上拉加载完成 -- 默认不显示
+          channel.finished = false
         })
         // 将获取的频道赋值给 data()中绑定的channels[循环列表]
         this.channels = data.channels
@@ -87,7 +91,13 @@ export default {
       // 将获取到的文章push添加到之前列表中
       this.currentChannel.articles.push(...data.results)
       // 加载完成后 loading关闭
-      this.loading = false
+      this.currentChannel.loading = false
+      // 文章加载完毕
+      // 如果某一个频道加载完毕，其他频道中的finished 也是加载完毕
+      if (data.results.length === 0) {
+        // 加载完成 finished(加载成功)改为true
+        this.currentChannel.finished = true
+      }
     }
   }
 }
