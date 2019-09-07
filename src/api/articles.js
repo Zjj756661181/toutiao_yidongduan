@@ -23,7 +23,7 @@ export const getArticles = ({
 }
 
 // 不感兴趣 /app/v1_0/article/dislikes/:target
-export const dislikeArticles = (id) => {
+export const dislikeArticle = (id) => {
   // 返回id
   return request.post('/app/v1_0/article/dislikes', {
     target: id

@@ -7,9 +7,9 @@
     <van-dialog :value="value" @input="$emit('input',$event)" :showConfirmButton="false" closeOnClickOverlay>
       <!-- 弹层组件 不感兴趣 -->
       <van-cell-group v-show="!showReports">
-        <van-cell title="不感兴趣" icon="location-o" />
+        <van-cell title="不感兴趣" icon="location-o" @click="handle('dislike')"/>
         <van-cell title="反馈垃圾内容" icon="location-o" is-link @click="showReports=true" />
-        <van-cell title="拉黑作者" icon="location-o" />
+        <van-cell title="拉黑作者" icon="location-o" @click="handle('blacklist')"/>
       </van-cell-group>
       <!-- 举报文章 -->
       <van-cell-group v-show="showReports">
@@ -23,6 +23,9 @@
 </template>
 
 <script>
+import { dislikeArticle } from '@/api/articles'
+import { blacklists } from '@/api/user'
+
 export default {
   name: 'MoreAction',
   props: {
@@ -40,6 +43,47 @@ export default {
     return {
       // show: true,
       showReports: false
+    }
+  },
+  methods: {
+    // handle 方法 --------------------------------
+    // 点击cell的时候都执行这个方法 通过type判定具体的执行操作
+    handle (type) {
+      switch (type) {
+        case 'dislike':
+          // 不感兴趣
+          this.dislike()
+          break
+        case 'blacklist':
+          // 拉黑作者
+          this.blacklistUser()
+          break
+      }
+    },
+    // 不感兴趣 ------------------------------------
+    async dislike () {
+      try {
+        await dislikeArticle(this.article.art_id)
+        // 操作成功提示
+        this.$toast.success('操作成功')
+      } catch (err) {
+        // 操作失败提示
+        this.$toast.fail('操作失败')
+      }
+    },
+    // 拉黑作者 ------------------------------------
+    async blacklistUser () {
+      try {
+        await blacklists(this.article.aut_id)
+        // 通知父组件，拉黑成功
+        //    隐藏对话框，删除数据
+        this.$emit('handleSuccess')
+        // 操作成功提示
+        this.$toast.success('操作成功')
+      } catch (err) {
+        // 操作失败提示
+        this.$toast.fail('操作失败')
+      }
     }
   }
 }

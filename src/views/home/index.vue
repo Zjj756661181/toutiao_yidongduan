@@ -7,7 +7,7 @@
       <!--单击按钮 弹出 频道弹层  -->
       <!-- <van-icon slot="nav-right" name="wap-nav" @click="showChannelsEdit=true"/> -->
       <!-- 频道标签 == 遍历循环 tab 标签页，显示频道列表 -->
-      <van-tab v-for="channel in channels" :title="channel.name" :key="channel.id">
+      <van-tab type="line" v-for="channel in channels" :title="channel.name" :key="channel.id">
         <!-- 下拉刷新 -->
         <van-pull-refresh
           v-model="channel.pullLoading"
