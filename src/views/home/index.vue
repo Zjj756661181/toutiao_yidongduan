@@ -62,6 +62,7 @@ import { getUserChannels } from '@/api/channel'
 import { getArticles } from '@/api/articles'
 import MoreAction from '../components/MoreAction'
 import ChannelsEdit from '../components/ChannelsEdit'
+import { getItem, setItem } from '@/utils/localStorage'
 // Loading 加载 需引入
 import Vue from 'vue'
 import { Lazyload } from 'vant'
@@ -107,10 +108,21 @@ export default {
     // 获取频道列表 ---------------------------------------------
     async getChannelsList () {
       try {
-        const data = await getUserChannels()
+        let channels = []
+        // 1.如果用户登录，发送请求，获取数据
+        if (this.$store.state.user) {
+          const data = await getUserChannels()
+          channels = data.channles
+        } else {
+          // 2.如果用户没有登录，则从本地储存中找数据，没有数据在发送请求
+          // 如果本地存储中没有值，获取的是null
+          channels = getItem('channels')
+          // 存储到本地存储中
+          setItem('channels', channels)
+        }
         // 给所有的列表设置时间戳(每次上拉 | 下拉需要) 文章数组(上拉 | 下拉更新后需要push进之前的列表)
         // forEach 遍历给每个频道都加入
-        data.channels.forEach(channel => {
+        channels.forEach(channel => {
           // 当前时间戳 设空(第一次获取没有当前时间戳)
           channel.timestamp = null
           // 文章列表
@@ -123,7 +135,7 @@ export default {
           channel.pullLoading = false
         })
         // 将获取的频道赋值给 data()中绑定的channels[循环列表]
-        this.channels = data.channels
+        this.channels = channels
       } catch (error) {
         console.log(error)
       }

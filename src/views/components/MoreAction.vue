@@ -13,10 +13,14 @@
       </van-cell-group>
       <!-- 举报文章 -->
       <van-cell-group v-show="showReports">
+        <!-- 回退不感兴趣弹框箭头 -->
         <van-cell icon="arrow-left" @click="showReports=false" />
-        <van-cell title="标题夸张" @click="handle('report', 1)"/>
-        <van-cell title="低俗色情" @click="handle('report', 2)"/>
-        <van-cell title="错别字多" @click="handle('report', 3)"/>
+        <!-- 举报作者列表 -->
+        <van-cell
+        v-for="item in reqortList"
+        :key="item.type"
+        :title="item.title"
+        @click="handle('report', item.type)"/>
       </van-cell-group>
     </van-dialog>
   </div>
@@ -42,7 +46,19 @@ export default {
   data () {
     return {
       // show: true,
-      showReports: false
+      showReports: false,
+      // 举报类型： 0-其他问题，1-标题夸张，2-低俗色情，3-错别字多，4-旧闻重复，5-广告软文，6-内容不实，7-涉嫌违法犯罪，8-侵权'
+      reqortList: [
+        { title: '标题夸张', type: 1 },
+        { title: '低俗色情', type: 2 },
+        { title: '错别字多', type: 3 },
+        { title: '旧闻重复', type: 4 },
+        { title: '广告软文', type: 5 },
+        { title: '内容不实', type: 6 },
+        { title: '涉嫌违法犯罪', type: 7 },
+        { title: '侵权', type: 8 },
+        { title: '其他问题', type: 0 }
+      ]
     }
   },
   methods: {
