@@ -3,7 +3,7 @@
     <!-- 导航头 -->
     <van-nav-bar fixed title="首页" />
     <!-- 频道列表 -->
-    <van-tabs animated>
+    <van-tabs animated v-model="activeIndex">
       <!-- 频道标签 -->
       <van-tab v-for="channel in channels" :title="channel.name" :key="channel.id">
         <!-- 上拉刷新事件 -->
@@ -22,6 +22,8 @@ import { getUserChannels } from '@/api/channel'
 export default {
   data () {
     return {
+      // 设置tabs默认索引
+      activeIndex: 0,
       // 列表
       list: [],
       // 上拉显示加载 默认不显示
