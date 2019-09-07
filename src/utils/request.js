@@ -1,6 +1,6 @@
 import axios from 'axios'
 import JSONbig from 'json-bigint'
-import store from '@/utils/request'
+import store from '@/store/index'
 
 // 创建axios实例，设置不同的baseURL ------------------
 const instance = axios.create({

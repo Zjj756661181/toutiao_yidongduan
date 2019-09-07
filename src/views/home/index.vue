@@ -4,7 +4,8 @@
     <van-nav-bar fixed title="首页" />
     <!-- 频道列表 -->
     <van-tabs animated>
-      <van-tab v-for="index in 8" :title="'标签 ' + index" :key="index">
+      <!-- 频道标签 -->
+      <van-tab v-for="channel in channels" :title="'channel.name'" :key="channel.id">
         <!-- 文章列表,不同的标签页下有不同的列表 -->
         <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="onLoad">
           <van-cell v-for="item in list" :key="item" :title="item" />
@@ -15,6 +16,8 @@
 </template>
 
 <script>
+import { getUserChannels } from '@/api/channel'
+
 export default {
   data () {
     return {
@@ -23,11 +26,26 @@ export default {
       // 上拉显示加载 默认不显示
       loading: false,
       // 上拉加载完成显示加载成功 默认不显示
-      finished: false
+      finished: false,
+      // 频道列表
+      channels: []
     }
   },
+  created () {
+    this.getChannelsList()
+  },
   methods: {
-    // 上拉事件
+    // 获取频道列表 ---------------------------------------------
+    async getChannelsList () {
+      try {
+        const data = await getUserChannels()
+        this.channels = data.channels
+        // console.log(this.channels)
+      } catch (err) {
+        console.log(err)
+      }
+    },
+    // 上拉事件 -------------------------------------------------
     onLoad () {
       // 异步更新数据
       setTimeout(() => {
