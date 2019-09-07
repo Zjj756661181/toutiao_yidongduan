@@ -6,14 +6,20 @@
     <van-tabs animated v-model="activeIndex">
       <!--单击按钮 弹出 频道弹层  -->
       <!-- <van-icon slot="nav-right" name="wap-nav" @click="showChannelsEdit=true"/> -->
-      <!-- 频道标签 -->
+      <!-- 频道标签 == 遍历循环 tab 标签页，显示频道列表 -->
       <van-tab v-for="channel in channels" :title="channel.name" :key="channel.id">
-        <!-- 上拉刷新事件 -->
-        <van-list v-model="channel.loading" :finished="channel.finished" finished-text="没有更多了" @load="onLoad">
-          <!-- 文章列表,不同的标签页下有不同的列表 -->
-          <van-cell v-for="article in currentChannel.articles" :key="article.art_id.toString()" :title="article.title" >
-          </van-cell>
-        </van-list>
+        <!-- 下拉刷新 -->
+        <van-pull-refresh v-model="channel.pullLoading" @refresh="onRefresh" :success-text="successText">
+          <!-- 上拉刷新事件 -->
+          <van-list v-model="channel.loading" :finished="channel.finished" finished-text="没有更多了" @load="onLoad">
+            <!-- 文章列表,不同的标签页下有不同的列表 -->
+            <van-cell
+              v-for="article in currentChannel.articles"
+              :key="article.art_id.toString()"
+              :title="article.title"
+            ></van-cell>
+          </van-list>
+        </van-pull-refresh>
       </van-tab>
     </van-tabs>
   </div>
@@ -35,7 +41,9 @@ export default {
       // // 上拉加载完成显示加载成功 默认不显示
       // finished: false,
       // 频道列表
-      channels: []
+      channels: [],
+      // 下拉刷新成功后提示
+      successText: ''
     }
   },
   created () {
@@ -54,9 +62,9 @@ export default {
     async getChannelsList () {
       try {
         const data = await getUserChannels()
-        // 给所有的列表设置时间戳(每次上拉需要) 文章数组(上拉更新后需要push进之前的列表)
+        // 给所有的列表设置时间戳(每次上拉 | 下拉需要) 文章数组(上拉 | 下拉更新后需要push进之前的列表)
         // forEach 遍历给每个频道都加入
-        data.channels.forEach((channel) => {
+        data.channels.forEach(channel => {
           // 当前时间戳 设空(第一次获取没有当前时间戳)
           channel.timestamp = null
           // 文章列表
@@ -65,9 +73,33 @@ export default {
           channel.loading = false
           // 上拉加载完成 -- 默认不显示
           channel.finished = false
+          // 下拉刷新 -- 默认不显示
+          channel.pullLoading = false
         })
         // 将获取的频道赋值给 data()中绑定的channels[循环列表]
         this.channels = data.channels
+      } catch (error) {
+        console.log(error)
+      }
+    },
+    // 下拉刷新 -------------------------------------------------
+    async onRefresh () {
+      // 下拉时获取 id 时间戳 是否置顶[同上拉]
+      try {
+        const data = await getArticles({
+        // 获取参数 id 时间戳 是否置顶 === 赋值
+        // id : 计算属性[获取上拉时当前属于哪个频道的id]
+          channelId: this.currentChannel.id,
+          // 时间戳 : 前一页历史数据 如第一次获取列表赋值最新时间
+          timestamp: Date.now(),
+          // // 是否包含置顶 - 1置顶 ，0不包含置顶
+          withTop: 1
+        })
+        // 刷新成功后unshift添加到列表上方
+        this.currentChannel.articles.unshift(...data.results)
+        //
+        // 添加成功提示
+        this.successText = `加载了${data.results.length}条数据`
       } catch (error) {
         console.log(error)
       }
