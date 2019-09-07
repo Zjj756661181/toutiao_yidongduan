@@ -14,16 +14,16 @@
       <!-- 举报文章 -->
       <van-cell-group v-show="showReports">
         <van-cell icon="arrow-left" @click="showReports=false" />
-        <van-cell title="标题夸张" />
-        <van-cell title="低俗色情" />
-        <van-cell title="错别字多" />
+        <van-cell title="标题夸张" @click="handle('report', 1)"/>
+        <van-cell title="低俗色情" @click="handle('report', 2)"/>
+        <van-cell title="错别字多" @click="handle('report', 3)"/>
       </van-cell-group>
     </van-dialog>
   </div>
 </template>
 
 <script>
-import { dislikeArticle } from '@/api/articles'
+import { dislikeArticle, reportArticle } from '@/api/articles'
 import { blacklists } from '@/api/user'
 
 export default {
@@ -48,7 +48,7 @@ export default {
   methods: {
     // handle 方法 --------------------------------
     // 点击cell的时候都执行这个方法 通过type判定具体的执行操作
-    handle (type) {
+    handle (type, reportType) {
       switch (type) {
         case 'dislike':
           // 不感兴趣
@@ -57,6 +57,10 @@ export default {
         case 'blacklist':
           // 拉黑作者
           this.blacklistUser()
+          break
+        case 'report':
+          // 拉黑作者
+          this.report(reportType)
           break
       }
     },
@@ -82,6 +86,21 @@ export default {
         this.$toast.success('操作成功')
       } catch (err) {
         // 操作失败提示
+        this.$toast.fail('操作失败')
+      }
+    },
+    // 举报作者 -----------------------------------
+    async report (reportType) {
+      try {
+        await reportArticle({
+          target: this.article.art_id,
+          type: reportType
+        })
+        // 告诉父组件隐藏对话框
+        this.$emit('input', false)
+        // 成功提示
+        this.$toast.success('操作成功')
+      } catch (error) {
         this.$toast.fail('操作失败')
       }
     }
