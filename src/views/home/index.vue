@@ -6,8 +6,9 @@
     <van-tabs animated>
       <!-- 频道标签 -->
       <van-tab v-for="channel in channels" :title="channel.name" :key="channel.id">
-        <!-- 文章列表,不同的标签页下有不同的列表 -->
+        <!-- 上拉刷新事件 -->
         <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="onLoad">
+          <!-- 文章列表,不同的标签页下有不同的列表 -->
           <van-cell v-for="item in list" :key="item" :title="item" />
         </van-list>
       </van-tab>
@@ -35,6 +36,8 @@ export default {
     this.getChannelsList()
   },
   methods: {
+    // 获取文章列表 ---------------------------------------------
+
     // 获取频道列表 ---------------------------------------------
     async getChannelsList () {
       try {
