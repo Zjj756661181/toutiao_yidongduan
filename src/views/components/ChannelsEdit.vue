@@ -136,6 +136,12 @@ export default {
     },
     // 点击推荐频道时 将channel添加到我的频道 -------
     async handleChannelItem (channel) {
+      // 点击推荐频道时，新加入的数据需要动态$set获取数据信息
+      this.$set(channel, 'timestamp', null)
+      this.$set(channel, 'articles', [])
+      this.$set(channel, 'loading', false)
+      this.$set(channel, 'finished', false)
+      this.$set(channel, 'pullLoading', false)
       // 1. 把channel添加到我的频道
       this.channels.push(channel)
       // 2. 判断是否登录
