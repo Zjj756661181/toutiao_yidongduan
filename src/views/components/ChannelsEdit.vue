@@ -20,7 +20,7 @@
     <!-- 推荐频道 -->
     <van-cell title="推荐频道" label="点击添加频道" />
     <van-grid>
-      <van-grid-item v-for="(channel,index) in channels" :key="channel.id">
+      <van-grid-item v-for="(channel,index) in channels" :key="channel.id" @click="handleMyChannelItem(index)">
         <div
           slot="text"
           class="van-grid-item__text"
@@ -81,7 +81,7 @@ export default {
     this.loadAllChannels()
   },
   methods: {
-    // 获取所有频道列表
+    // 获取所有频道列表 ----------------------------
     async loadAllChannels () {
       try {
         // 发送请求
@@ -90,6 +90,14 @@ export default {
         this.allChannels = data.channels
       } catch (error) {
         console.log(error)
+      }
+    },
+    // 点击我的频道传值父组件 ----------------------
+    handleMyChannelItem (index) {
+      // 1.非编辑模式
+      if (!this.isEdit) {
+        // 传值父组件 选中的index
+        this.$emit('activeChange', index)
       }
     }
   }

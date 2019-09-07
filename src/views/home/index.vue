@@ -53,7 +53,7 @@
     <!-- 弹出层组件 - 不感兴趣 -->
     <more-action v-model="showMoreAction" v-if="currentArticle" :article="currentArticle"></more-action>
     <!-- 举报弹出层 -->
-    <channels-edit :active="activeIndex" :channels="channels" v-model="showChannelEdit"></channels-edit>
+    <channels-edit @activeChange="handleChange" :active="activeIndex" :channels="channels" v-model="showChannelEdit"></channels-edit>
   </div>
 </template>
 
@@ -195,10 +195,18 @@ export default {
         this.currentChannel.finished = true
       }
     },
+    // 点击 x 时 弹出隐藏框 -------------------------
     // 点击 x 时 显示不感兴趣弹框 获取当前文章内容
     handleAction (article) {
       this.showMoreAction = true
       this.currentArticle = article
+    },
+    // 点击我的频道 显示此频道内容 -------------------
+    // 接收子组件传出的index 赋值 当前频道
+    handleChange (index) {
+      this.activeIndex = index
+      // 显示当前频道 需关闭弹层
+      this.showChannelEdit = false
     }
   }
 }
