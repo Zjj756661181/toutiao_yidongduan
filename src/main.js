@@ -4,12 +4,15 @@ import router from './router'
 import store from './store/index'
 import Vant from 'vant'
 import VeeValidate, { Validator } from 'vee-validate'
+import { fmtDate } from '@/utils/dayjs'
 // 导入VeeValidate的中文包
 import zhCN from 'vee-validate/dist/locale/zh_CN'
 import 'vant/lib/index.css'
 import '@/style/index.less'
 
 Vue.use(Vant)
+// 时间过滤
+Vue.filter('fmtDate', fmtDate)
 // 配置插件VeeValidate
 Vue.use(VeeValidate, {
   // 文本框中触发验证的事件，默认是input

@@ -9,15 +9,43 @@
       <!-- 频道标签 == 遍历循环 tab 标签页，显示频道列表 -->
       <van-tab v-for="channel in channels" :title="channel.name" :key="channel.id">
         <!-- 下拉刷新 -->
-        <van-pull-refresh v-model="channel.pullLoading" @refresh="onRefresh" :success-text="successText">
+        <van-pull-refresh
+          v-model="channel.pullLoading"
+          @refresh="onRefresh"
+          :success-text="successText"
+        >
           <!-- 上拉刷新事件 -->
-          <van-list v-model="channel.loading" :finished="channel.finished" finished-text="没有更多了" @load="onLoad">
+          <van-list
+            v-model="channel.loading"
+            :finished="channel.finished"
+            finished-text="没有更多了"
+            @load="onLoad"
+          >
             <!-- 文章列表,不同的标签页下有不同的列表 -->
-            <van-cell
-              v-for="article in currentChannel.articles"
-              :key="article.art_id.toString()"
-              :title="article.title"
-            ></van-cell>
+            <van-cell v-for="article in currentChannel.articles" :key="article.art_id.toString()" :title="article.title">
+              <div slot="label">
+                <!-- grid 显示封面  article.cover.type   0 没有图片   1 1个图片 3 3个图片  -->
+                <van-grid v-if="article.cover.type" :border="false" :column-num="3">
+                  <van-grid-item v-for="(img, index) in article.cover.images" :key="img + index">
+                     <van-image lazy-load height="80" :src="img" >
+                      <!-- 图片的加载提示 -->
+                      <template v-slot:loading>
+                        <van-loading type="spinner" size="20" />
+                      </template>
+                      <!-- 自定义加载失败提示 -->
+                      <template v-slot:error>加载失败</template>
+                    </van-image>
+                  </van-grid-item>
+                </van-grid>
+                <p>
+                  <span>{{ article.aut_name }}</span>&nbsp;
+                  <span>{{ article.comm_count }}评论</span>&nbsp;
+                  <span>{{ article.pubdate | fmtDate }}</span>&nbsp;
+                  <!-- x 图标 -->
+                  <van-icon name="cross" class="close" />
+                </p>
+              </div>
+            </van-cell>
           </van-list>
         </van-pull-refresh>
       </van-tab>
@@ -28,6 +56,12 @@
 <script>
 import { getUserChannels } from '@/api/channel'
 import { getArticles } from '@/api/articles'
+// Loading 加载 需引入
+import Vue from 'vue'
+import { Lazyload } from 'vant'
+
+// options 为可选参数，无则不传
+Vue.use(Lazyload)
 
 export default {
   data () {
@@ -56,8 +90,6 @@ export default {
     }
   },
   methods: {
-    // 获取文章列表 ---------------------------------------------
-
     // 获取频道列表 ---------------------------------------------
     async getChannelsList () {
       try {
@@ -87,17 +119,19 @@ export default {
       // 下拉时获取 id 时间戳 是否置顶[同上拉]
       try {
         const data = await getArticles({
-        // 获取参数 id 时间戳 是否置顶 === 赋值
-        // id : 计算属性[获取上拉时当前属于哪个频道的id]
+          // 获取参数 id 时间戳 是否置顶 === 赋值
+          // id : 计算属性[获取上拉时当前属于哪个频道的id]
           channelId: this.currentChannel.id,
           // 时间戳 : 前一页历史数据 如第一次获取列表赋值最新时间
           timestamp: Date.now(),
           // // 是否包含置顶 - 1置顶 ，0不包含置顶
           withTop: 1
         })
+        // 下拉刷新成功后不显示加载
+        this.channel.pullLoading = false
+        this.channel.loading = false
         // 刷新成功后unshift添加到列表上方
         this.currentChannel.articles.unshift(...data.results)
-        //
         // 添加成功提示
         this.successText = `加载了${data.results.length}条数据`
       } catch (error) {
@@ -127,7 +161,7 @@ export default {
       // 文章加载完毕
       // 如果某一个频道加载完毕，其他频道中的finished 也是加载完毕
       if (data.results.length === 0) {
-        // 加载完成 finished(加载成功)改为true
+        // 文章加载完毕 finished(加载成功)改为true
         this.currentChannel.finished = true
       }
     }
