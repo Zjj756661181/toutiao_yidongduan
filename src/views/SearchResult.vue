@@ -5,13 +5,16 @@
       class="van-nav-bar"
       title="搜索结果"
       left-text="返回"
+      fixed
       left-arrow
       @click-left="$router.back()"
     />
     <!-- 列表 -->
     <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="onLoad">
       <!-- 文章列表 -->
-      <van-cell v-for="item in list" :key="item" :title="item">
+      <van-cell v-for="article in list"
+        :key="article.art_id.toString()"
+        :title="article.title">
         <!-- 文章列表 文字 下方图片/时间/宫格  -->
         <div>
           <!-- 文章列表 图片显示 column-num自定义列数 -->
@@ -45,6 +48,7 @@
   </div>
 </template>
 
+<script src="./node_modules/lodash/lodash.js"></script>
 <script>
 import { getSearch } from '@/api/search'
 
@@ -58,7 +62,11 @@ export default {
       // 加载中 默认不显示
       loading: false,
       // 加载完成 默认不显示
-      finished: false
+      finished: false,
+      // 页数，不传默认为1
+      page: 1,
+      // 每页数量
+      per_page: 10
     }
   },
   created () {
@@ -68,15 +76,28 @@ export default {
     // 获取搜索结果 内容 -----------------
     async getSearchResults () {
       try {
-        const data = await getSearch(this.item)
-        this.list = data.results
-        console.log(data.results)
+        const data = await getSearch({
+          page: this.page, // 页数，不传默认为1
+          perPage: this.per_page, // 每页数量
+          q: this.q // 搜索关键词, // 页数，不传默认为1
+        })
+        this.list.push(...data.results)
+        // console.log(data.results)
+        this.page++
+        // 加载结束
+        this.loading = false
+        // 判断是否加载完毕
+        if (data.results.length === 0) {
+          this.finished = true
+        }
       } catch (error) {
-        console.log(error)
+        this.$toast.fail('获取搜索结果数据失败')
       }
     },
     // 点击左箭头返回搜索页 --------------
-    onClickLeft () {},
+    onClickLeft () {
+      this.$router.push('/Search')
+    },
     // 上拉更新数据 ---------------------
     onLoad () {
       // 异步更新数据
@@ -98,4 +119,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.van-list {
+  margin-top: 46px;
+}
 </style>

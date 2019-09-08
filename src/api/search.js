@@ -11,11 +11,15 @@ export const getSuggestion = (q) => {
 
 // 获取搜索结果 /app/v1_0/search
 export const getSearch = ({
+  page, // 页数，不传默认为1
+  perPage, // 每页数量
   q // 搜索关键词
 }) => {
   return request.get('/app/v1_0/search', {
     params: {
-      q // 搜索关键词
+      page, // 页数，不传默认为1
+      per_page: perPage, // 每页数量
+      q: q// 搜索关键词
     }
   })
 }
