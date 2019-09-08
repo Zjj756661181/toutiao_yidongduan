@@ -15,20 +15,35 @@
         v-show="!isEdit"
         @click="isEdit=true"
       >编辑</van-button>
-      <van-button round type="danger" size="mini" v-show="isEdit" @click="isEdit=false">完成</van-button>
+      <van-button
+      round
+      type="danger"
+      size="mini"
+      v-show="isEdit"
+      @click="isEdit=false">完成</van-button>
     </van-cell>
     <van-grid>
       <!-- 我的频道列表 -->
       <van-grid-item
-      v-for="(channel,index) in recommendChannels"
-      :key="channel.id"
-       @click="handleMyChannelItem(index,channel.id)">
+        v-for="(channel,index) in channels"
+        :key="channel.id"
+        @click="handleMyChannelItem(index,channel.id)">
        <div slot="text"
           class="van-grid-item__text"
           :class="{ active: active === index }"
         >{{ channel.name }}</div>
         <!-- 关闭按钮 ------------ -->
-        <van-icon v-if="(active !== index && index!==0 && isEdit)" slot="icon" class="close-icon" name="close" />
+        <van-icon
+          slot="icon"
+          class="close-icon"
+          name="close"
+          v-show="isEdit && index !== 0"
+        />
+        <!-- <van-icon
+        v-if="(active !== index && index!==0 && isEdit)"
+        slot="icon"
+        class="close-icon"
+        name="close" /> -->
       </van-grid-item>
     </van-grid>
     <!-- 推荐频道 ------------------------- -->
@@ -40,8 +55,7 @@
         v-for="channel in recommendChannels"
         :key="channel.id"
         :text="channel.name"
-      >
-      </van-grid-item>
+      />
     </van-grid>
   </van-popup>
 </template>
@@ -84,12 +98,12 @@ export default {
     recommendChannels () {
       // 1.获取我的频道中所有id组成的数组
       // map()遍历数组，返回一个新的数组，新数组中的元素由回调函数中返回的元素组成
-      const ids = this.channels.map(channel => {
+      const ids = this.channels.map((channel) => {
         return channel.id
       })
       // 2.filter() 过滤所有频道，把频道id重复出现的项去掉
       // filter() 把满足条件的item，返回组成一个新的数组
-      return this.allChannels.filter(channel => {
+      return this.allChannels.filter((channel) => {
         // includes() es6新增，判断数组中是否包含某一项
         return !ids.includes(channel.id)
       })
@@ -116,10 +130,11 @@ export default {
       if (!this.isEdit) {
         // 传值父组件 选中的index
         this.$emit('activeChange', index)
+        return
       }
       // 2.编辑模式
       // 2.1 把点击的频道，从我的频道移除
-      this.channel.splice(index, 1)
+      this.channels.splice(index, 1)
       // 2.2 判定是否登录
       // 通过mapstate作了映射
       if (this.user) {
@@ -149,7 +164,7 @@ export default {
         // 3. 如果登录，发送请求
         try {
           // 添加用户的指定频道
-          await addChannel(channel.id, this.channela.legth)
+          await addChannel(channel.id, this.channels.length)
         } catch (error) {
           this.$toast.fail('操作失败')
         }
@@ -158,12 +173,12 @@ export default {
       // 4. 如果没有登录，把我的频道存储到本地存储
       setItem('channels', this.channels)
     }
-  },
-  wathc: {
-    active () {
-      console.log(this.active)
-    }
   }
+  // wathc: {
+  //   active () {
+  //     console.log(this.active)
+  //   }
+  // }
 }
 </script>
 
