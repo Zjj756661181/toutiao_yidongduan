@@ -12,7 +12,7 @@
         round
         type="danger"
         size="mini"
-        v-show="!isEdit && index !== 0"
+        v-show="!isEdit"
         @click="isEdit=true"
       >编辑</van-button>
       <van-button round type="danger" size="mini" v-show="isEdit" @click="isEdit=false">完成</van-button>
@@ -20,7 +20,7 @@
     <van-grid>
       <!-- 我的频道列表 -->
       <van-grid-item
-      v-for="channel in recommendChannels"
+      v-for="(channel,index) in recommendChannels"
       :key="channel.id"
        @click="handleMyChannelItem(index,channel.id)">
        <div slot="text"
@@ -28,7 +28,7 @@
           :class="{ active: active === index }"
         >{{ channel.name }}</div>
         <!-- 关闭按钮 ------------ -->
-        <van-icon slot="icon" class="close-icon" name="close" />
+        <van-icon v-if="(active !== index && index!==0 && isEdit)" slot="icon" class="close-icon" name="close" />
       </van-grid-item>
     </van-grid>
     <!-- 推荐频道 ------------------------- -->
@@ -157,6 +157,11 @@ export default {
       }
       // 4. 如果没有登录，把我的频道存储到本地存储
       setItem('channels', this.channels)
+    }
+  },
+  wathc: {
+    active () {
+      console.log(this.active)
     }
   }
 }

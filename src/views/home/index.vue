@@ -5,12 +5,12 @@
     <!-- 频道列表 -->
     <van-tabs animated v-model="activeIndex">
       <!--单击按钮 弹出 频道弹层  -->
-      <van-icon slot="nav-right" name="wap-nav" @click="showChannelsEdit=true"/>
+      <van-icon slot="nav-right" name="wap-nav" @click="showChannelEdit=true"/>
       <!-- 频道标签 == 遍历循环 tab 标签页，显示频道列表 -->
       <van-tab type="line" v-for="channel in channels" :title="channel.name" :key="channel.id">
         <!-- 下拉刷新 -->
         <van-pull-refresh
-          v-model="channel.pullLoading"
+          v-model="currentChannel.pullLoading"
           @refresh="onRefresh"
           :success-text="successText"
         >
@@ -53,6 +53,7 @@
     <!-- 弹出层组件 - 不感兴趣 -->
     <more-action v-model="showMoreAction" v-if="currentArticle" :article="currentArticle"></more-action>
     <!-- 举报弹出层 -->
+    <!-- 修改频道 -->
     <channels-edit @activeChange="handleChange" :active="activeIndex" :channels="channels" v-model="showChannelEdit"></channels-edit>
   </div>
 </template>
@@ -92,7 +93,7 @@ export default {
       // 点击x的时候，记录的当前文章对象
       currentArticle: null,
       // 控制频道管理的弹出层显示隐藏
-      showChannelEdit: false
+      showChannelEdit: true
     }
   },
   created () {
@@ -116,7 +117,7 @@ export default {
         // 1.如果用户登录，发送请求，获取数据
         if (this.$store.state.user) {
           const data = await getUserChannels()
-          channels = data.channles
+          channels = data.channels
         } else {
           // 2.如果用户没有登录，则从本地储存中找数据，没有数据在发送请求
           // 如果本地存储中没有值，获取的是null
@@ -158,8 +159,8 @@ export default {
           withTop: 1
         })
         // 下拉刷新成功后不显示加载
-        this.channel.pullLoading = false
-        this.channel.loading = false
+        this.currentChannel.pullLoading = false
+        this.currentChannel.loading = false
         // 刷新成功后unshift添加到列表上方
         this.currentChannel.articles.unshift(...data.results)
         // 添加成功提示
