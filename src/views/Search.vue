@@ -1,6 +1,7 @@
 <template>
   <div>
     <!-- 搜索框 -->
+    <!-- v-html 渲染标签 其他指令会把标签转化 -->
     <van-search
       v-model="value"
       placeholder="请输入搜索关键词"
@@ -18,8 +19,9 @@
         @click="onSearch(item)"
         v-for="item in suggestionList"
         :key="item"
-        :title="item"
-        icon="search" />
+        icon="search">
+        <div slot="title" v-html="highlight(item)"></div>
+      </van-cell>
     </van-cell-group>
 
     <!-- 历史记录 -->
@@ -46,7 +48,7 @@
 
 <script>
 import { getSuggestion } from '@/api/search'
-import { userHistories } from '@/api/user'
+// import { userSearchHistories } from '@/api/user'
 import { mapState } from 'vuex'
 import * as storageTools from '@/utils/localStorage'
 
@@ -76,7 +78,17 @@ export default {
     this.histoies = storageTools.getItem('history') || []
   },
   methods: {
-    // 搜索
+    // 搜索框输入值 高亮显示 -------------------
+    highlight (item) {
+      // 用正则方法赋值
+      // item提示项
+      // this.value
+      const reg = new RegExp(this.value, 'gi')
+      console.log(reg)
+      //  /abc/gi
+      return item.replace(reg, `<sapn style="color: red">${this.value}</span>`)
+    },
+    // 搜索 -----------------------------------
     async onSearch (item) {
       // 判断histories中是否已经存在item
       if (this.histories.includes(item)) {
@@ -87,10 +99,11 @@ export default {
       // 判定用户登录
       if (this.user) {
         // 发送请求
-        const data = await userHistories()
+        // const data = await userSearchHistories()
         // 赋值
-        this.histories = data
-          .return
+        // console.log(data)
+        // this.histories = data.results
+        return
       }
       // 没有登录就把数据存储到本地
       storageTools.setItem('history', this.histories)
@@ -120,6 +133,7 @@ export default {
       storageTools.setItem('history', this.histories)
     }
   }
+
 }
 </script>
 

@@ -5,7 +5,7 @@
     <!-- 频道列表 -->
     <van-tabs animated v-model="activeIndex">
       <!--单击按钮 弹出 频道弹层  -->
-      <van-icon slot="nav-right" name="wap-nav" @click="showChannelEdit=true"/>
+      <van-icon slot="nav-right" name="wap-nav" @click="showChannelEdit=true"  class="nav-btn"/>
       <!-- 频道标签 == 遍历循环 tab 标签页，显示频道列表 -->
       <van-tab type="line" v-for="channel in channels" :title="channel.name" :key="channel.id">
         <!-- 下拉刷新 -->
@@ -93,7 +93,7 @@ export default {
       // 点击x的时候，记录的当前文章对象
       currentArticle: null,
       // 控制频道管理的弹出层显示隐藏
-      showChannelEdit: true
+      showChannelEdit: false
     }
   },
   created () {

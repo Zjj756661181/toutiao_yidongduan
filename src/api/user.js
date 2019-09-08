@@ -27,6 +27,6 @@ export const blacklists = (id) => {
 }
 
 // 获取用户阅读历史/app/v1_0/user/histories
-export const userHistories = () => {
-  return request.get('/app/v1_0/user/histories')
-}
+// export const userHistories = () => {
+//   return request.get('/app/v1_0/user/histories')
+// }

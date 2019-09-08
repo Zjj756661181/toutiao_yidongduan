@@ -20,18 +20,27 @@ export default new Router({
       ]
     },
     {
-      path: '/search',
-      name: 'search',
-      component: () => import(/* webpackChunkName: "search" */ '../views/Search.vue')
+      path: '/Search',
+      name: 'Search',
+      component: () => import(/* webpackChunkName: "search" */ '@/views/Search.vue')
+    },
+    {
+      path: '/SearchResult',
+      name: 'SearchResult',
+      component: () => import(/* webpackChunkName: "searchResult" */ '@/views/SearchResult.vue')
     },
     {
       path: '/login',
       name: 'login',
-      // route level code-splitting
-      // this generates a separate chunk (about.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () => import(/* webpackChunkName: "about" */ '@/views/login.vue')
+      component: () => import(/* webpackChunkName: "login" */ '@/views/login.vue')
     }
-
+    // {
+    //   path: '/login',
+    //   name: 'login',
+    //   // route level code-splitting
+    //   // this generates a separate chunk (about.[hash].js) for this route
+    //   // which is lazy-loaded when the route is visited.
+    //   component: () => import(/* webpackChunkName: "login" */ '@/views/login.vue')
+    // }
   ]
 })
