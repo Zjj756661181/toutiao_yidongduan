@@ -29,14 +29,15 @@
       <van-cell title="历史记录">
         <!-- 自定义右侧内容 -->
         <div  v-show="isEdit" style="display: inline-block">
-          <span>全部删除</span>&nbsp;
+          <span @click="clearAllRecord()">全部删除</span>&nbsp;
           <span @click="isEdit=false">完成</span>&nbsp;
         </div>
         <van-icon v-show="!isEdit" @click="isEdit=true" name="delete" size="18px" />
       </van-cell>
 
        <van-cell
-        v-for="(item, index) in histories"
+        @click="onSearch(item)"
+        v-for="(item,index) in histories"
         :key="item"
         :title="item">
         <!-- 自定义右侧内容 -->
@@ -47,7 +48,8 @@
 </template>
 
 <script>
-import { getSuggestion } from '@/api/search'
+import _ from 'lodash'
+import { getSuggestion, delHistories } from '@/api/search'
 // import { userSearchHistories } from '@/api/user'
 import { mapState } from 'vuex'
 import * as storageTools from '@/utils/localStorage'
@@ -74,7 +76,7 @@ export default {
       // 从服务器获取数据
       return
     }
-    // 没有登录，从本地存储获取数据
+    // 没有登录，从本地存储获取数据storageTools
     this.histoies = storageTools.getItem('history') || []
   },
   methods: {
@@ -84,12 +86,15 @@ export default {
       // item提示项
       // this.value
       const reg = new RegExp(this.value, 'gi')
-      console.log(reg)
+      // console.log(reg)
       //  /abc/gi
       return item.replace(reg, `<sapn style="color: red">${this.value}</span>`)
     },
-    // 搜索 -----------------------------------
+    // 搜索 ----------------;-------------------
     async onSearch (item) {
+      // 跳转到搜索结果页面
+      this.$router.push({ path: '/SearchResult', query: { q: item } })
+
       // 判断histories中是否已经存在item
       if (this.histories.includes(item)) {
         return
@@ -111,7 +116,7 @@ export default {
     // 文本输入获取搜索提示 ---------------------
     onCancel () {},
     // 在文本框输入的过程中获取搜索提示
-    async handleInput () {
+    handleInput: _.debounce(async function () {
       // 判断是否为空
       if (this.value.length === 0) {
         return
@@ -124,13 +129,18 @@ export default {
       } catch (error) {
         console.log(error)
       }
-    },
+    }, 300),
     // 点击历史记录的删除按钮 --------------------
     handleDelete (index) {
       // 删除当前
       this.histories.splice(index, 1)
       // 数据变动重新存储
       storageTools.setItem('history', this.histories)
+    },
+    // 全部删除 历史记录 -----------------------------
+    async clearAllRecord () {
+      await delHistories()
+      // this.histories.clear()
     }
   }
 

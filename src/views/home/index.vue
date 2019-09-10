@@ -22,7 +22,11 @@
             @load="onLoad"
           >
             <!-- 文章列表,不同的标签页下有不同的列表 -->
-            <van-cell v-for="article in currentChannel.articles" :key="article.art_id.toString()" :title="article.title">
+            <van-cell
+              @click="$router.push({ name: 'detail', params:{ id: article.art_id.toString() } })"
+              v-for="article in currentChannel.articles"
+              :key="article.art_id.toString()"
+              :title="article.title">
               <div slot="label">
                 <!-- grid 显示封面  article.cover.type   0 没有图片   1 1个图片 3 3个图片  -->
                 <van-grid v-if="article.cover.type" :border="false" :column-num="3">
@@ -42,7 +46,7 @@
                   <span>{{ article.comm_count }}评论</span>&nbsp;
                   <span>{{ article.pubdate | fmtDate }}</span>&nbsp;
                   <!-- 点击x按钮，记录当前的文章对象 -->
-                  <van-icon name="cross" class="close" @click="handleAction(article)" />
+                  <van-icon name="cross" class="close" @click.stop="handleAction(article)" />
                 </p>
               </div>
             </van-cell>

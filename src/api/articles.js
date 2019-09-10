@@ -42,3 +42,8 @@ export const reqortArticle = ({
     type
   })
 }
+
+// 获取文章详情
+export const getArticleDetail = (id) => {
+  return request.get(`/app/v1_0/articles/${id}`)
+}

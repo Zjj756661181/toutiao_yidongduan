@@ -19,12 +19,12 @@ export const getSearch = ({
     params: {
       page, // 页数，不传默认为1
       per_page: perPage, // 每页数量
-      q: q// 搜索关键词
+      q// 搜索关键词
     }
   })
 }
 
-// 获取搜索历史 /app/v1_0/search/histories
-// export const userSearchHistories = () => {
-//   return request.get('/app/v1_0/user/histories')
-// }
+// 删除搜索历史 /app/v1_0/search/histories
+export const delHistories = () => {
+  return request.delete('/app/v1_0/search/histories')
+}
