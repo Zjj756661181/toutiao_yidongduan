@@ -16,6 +16,8 @@
       <div class="article-content" v-html="article.content"></div>
       <!-- 点赞和取消 -->
       <more-article :article="article"></more-article>
+      <!-- 评论列表 -->
+      <comment-list></comment-list>
     </div>
   </div>
 </template>
@@ -24,6 +26,7 @@
 import { getArticleDetail } from '@/api/articles'
 import AuthorInfo from './component/authorInfo'
 import MoreArticle from './component/MoreArticle'
+import CommentList from './component/CommentList'
 
 export default {
   name: 'detailIndex',
@@ -36,7 +39,8 @@ export default {
   },
   components: {
     AuthorInfo,
-    MoreArticle
+    MoreArticle,
+    CommentList
   },
   created () {
     // 渲染当前文章详情
