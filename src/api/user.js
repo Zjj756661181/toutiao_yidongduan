@@ -26,7 +26,15 @@ export const blacklists = (id) => {
   })
 }
 
-// 获取用户阅读历史/app/v1_0/user/histories
-// export const userHistories = () => {
-//   return request.get('/app/v1_0/user/histories')
-// }
+// 关注用户 /app/v1_0/user/followings  body / target: id
+export const FollowUser = (id) => {
+  return request.post('/app/v1_0/user/followings', {
+    // 参数id
+    target: id
+  })
+}
+
+// 取消关注用户 /app/v1_0/user/followings/:target  路径参数 / target: id
+export const unFollowUser = (id) => {
+  return request.delete(`/app/v1_0/user/followings/${id}`)
+}

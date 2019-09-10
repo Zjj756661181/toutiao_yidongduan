@@ -15,7 +15,7 @@
       <!-- 文章内容 -->
       <div class="article-content" v-html="article.content"></div>
       <!-- 点赞和取消 -->
-      <div>-- 点赞和取消待处理 --</div>
+      <more-article></more-article>
     </div>
   </div>
 </template>
@@ -23,6 +23,7 @@
 <script>
 import { getArticleDetail } from '@/api/articles'
 import AuthorInfo from './component/authorInfo'
+import MoreArticle from './component/MoreArticle'
 
 export default {
   name: 'detailIndex',
@@ -34,7 +35,8 @@ export default {
     }
   },
   components: {
-    AuthorInfo
+    AuthorInfo,
+    MoreArticle
   },
   created () {
     // 渲染当前文章详情
