@@ -18,6 +18,8 @@
       <more-article :article="article"></more-article>
       <!-- 评论列表 -->
       <comment-list :isArticle="true" :id="article.art_id.toString()"></comment-list>
+      <!-- 发布评论组件 -->
+      <send-comment :isArticle="true"></send-comment>
     </div>
   </div>
 </template>
@@ -27,6 +29,7 @@ import { getArticleDetail } from '@/api/articles'
 import AuthorInfo from './component/authorInfo'
 import MoreArticle from './component/MoreArticle'
 import CommentList from './component/CommentList'
+import SendComment from './component/SendComment'
 
 export default {
   name: 'detailIndex',
@@ -38,9 +41,14 @@ export default {
     }
   },
   components: {
+    // 作者信息 组件
     AuthorInfo,
+    // 点赞和取消 组件
     MoreArticle,
-    CommentList
+    // 评论列表 组件
+    CommentList,
+    // 发布评论 组件
+    SendComment
   },
   created () {
     // 渲染当前文章详情
