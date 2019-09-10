@@ -1,29 +1,25 @@
 <template>
   <van-list
-    v-model="loading"
-    :finished="finished"
-    finished-text="没有更多了"
-    @load="onLoad"
-  >
-    <van-cell
-      v-for="item in list"
-      :key="item"
-    >
+  v-model="loading"
+  :finished="finished"
+  finished-text="没有更多了"
+  @load="onLoad">
+    <van-cell v-for="comment in list" :key="comment.com_id.toString()">
       <div slot="icon">
-        <img class="avatar" src="http://toutiao.meiduo.site/Fn6-mrb5zLTZIRG3yH3jG8HrURdU" alt="">
+        <img class="avatar" :src="comment.aut_photo" alt />
       </div>
       <div slot="title">
-        <span>只是为了好玩儿</span>
+        <span>{{ comment.aut_name }}</span>
       </div>
       <div slot="default">
         <van-button icon="like-o" size="mini" plain>赞</van-button>
       </div>
       <div slot="label">
-        <p>hello world</p>
+        <p>{{ comment.content }}</p>
         <p>
-          <span>2019-7-17 14:08:20</span>
+          <span>{{ comment.pubdate | fmtData }}</span>
           ·
-          <span>回复</span>
+          <span>回复{{ comment.reply_count }}</span>
         </p>
       </div>
     </van-cell>
@@ -31,8 +27,13 @@
 </template>
 
 <script>
+import { getComment } from '@/api/comment'
+
 export default {
   name: 'CommentList',
+  // isArticle 是否是文章
+  // id  如果获取文章的评论，id文章的id，如果获取评论的评论 id是评论的id
+  props: ['isArticle', 'id'],
   data () {
     return {
       list: [],
@@ -41,11 +42,42 @@ export default {
     }
   },
   methods: {
-    onLoad () {}
+    // 获取评论 列表 ------------------------
+    async onLoad () {
+      try {
+        const data = await getComment({
+          // 是否是文章
+          isArticle: this.isArticle,
+          // 源id，文章id或评论id
+          source: this.id,
+          // 获取评论数据的偏移量，值为评论id，表示从此id的数据向后取，不传表示从第一页开始读取数据
+          offset: this.offset,
+          // 获取的评论数据个数，不传表示采用后端服务设定的默认每页数据量
+          limit: this.limit
+        })
+        // 当前获取的最后一条数据的id存储
+        this.offset = data.last_id
+        // 新获取的数据push进list
+        this.list.push(...data.results)
+        // 加载状态关闭
+        this.loading = false
+        // 检测是否加载完成  => 加载完成开启
+        if (data.results.length === 0) {
+          this.finished = true
+        }
+      } catch (error) {
+        this.$toast.fail('加载评论失败')
+      }
+    }
   }
 }
 </script>
 
-<style>
-
+<style lang="less" scoped>
+.avatar {
+  width: 25px;
+  height: 25px;
+  border-radius: 100%;
+  margin-right: 5px;
+}
 </style>

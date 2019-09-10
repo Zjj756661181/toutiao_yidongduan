@@ -2,6 +2,7 @@ import request from '@/utils/request'
 
 // 获取评论
 export const getComment = ({
+  // 是否是文章
   isArticle,
   // 源id，文章id或评论id
   source,

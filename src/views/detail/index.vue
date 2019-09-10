@@ -17,7 +17,7 @@
       <!-- 点赞和取消 -->
       <more-article :article="article"></more-article>
       <!-- 评论列表 -->
-      <comment-list></comment-list>
+      <comment-list :isArticle="true" :id="article.art_id.toString()"></comment-list>
     </div>
   </div>
 </template>
