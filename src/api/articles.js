@@ -47,3 +47,20 @@ export const reqortArticle = ({
 export const getArticleDetail = (id) => {
   return request.get(`/app/v1_0/articles/${id}`)
 }
+
+// 点赞  post('/app/v1_0/article/likings' )   Body / target: 文章id
+export const liking = (id) => {
+  return request.post('/app/v1_0/article/likings', {
+    target: id
+  })
+}
+
+// 取消点赞 delete(`/app/v1_0/article/likings/:target`)  路径参数 / target: id
+export const unliking = (id) => {
+  return request.delete(`/app/v1_0/article/likings/${id}`)
+}
+
+// 取消文章不喜欢 delete(` /app/v1_0/article/dislikes/:target`) 路径参数 / target: id
+export const undislikeArticle = (id) => {
+  return request.delete(`/app/v1_0/article/dislikes/${id}`)
+}

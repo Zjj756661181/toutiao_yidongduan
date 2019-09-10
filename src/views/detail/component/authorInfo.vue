@@ -29,7 +29,10 @@ export default {
     async handleFollowUser () {
       this.loading = true
       // 检测是否登录 未登录提示跳转登录页  登录后跳回本页面
-      // ......... 待完成
+      if (!this.$checkLogin()) {
+        return
+      }
+
       try {
         // 检测是否已关注 已关注 => 点击取消
         if (this.article.is_followed) {

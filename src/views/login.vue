@@ -105,7 +105,10 @@ export default {
         // 以上 1 - 2 两件事都是在store中完成
         this.setUser(data)
         // 跳转首页
-        this.$router.push('/')
+        // 获取url上查询字符串的 redirect
+        // 如果获取到redirect, 跳转到redirect指向的地址
+        // 如果没有redirect跳转到首页
+        this.$router.push(this.$route.params.redirect || '/')
         // 成功提示
         this.$toast.success('登录成功')
         // })

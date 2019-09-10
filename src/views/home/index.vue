@@ -58,7 +58,7 @@
     <more-action v-model="showMoreAction" v-if="currentArticle" :article="currentArticle"></more-action>
     <!-- 举报弹出层 -->
     <!-- 修改频道 -->
-    <channels-edit @activeChange="handleChange" :active="activeIndex" :channels="channels" v-model="showChannelEdit"></channels-edit>
+    <channels-edit @activeChange="handleChange" :active="activeIndex" :channels="channels" v-model="showChannelEdit" @last="handleLast"></channels-edit>
   </div>
 </template>
 
@@ -212,6 +212,10 @@ export default {
       this.activeIndex = index
       // 显示当前频道 需关闭弹层
       this.showChannelEdit = false
+    },
+    // 当频道管理删除的是激活索引数组中最后一项的时候
+    handleLast () {
+      this.activeIndex--
     }
   }
 }

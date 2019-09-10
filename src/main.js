@@ -9,10 +9,15 @@ import { fmtDate } from '@/utils/dayjs'
 import zhCN from 'vee-validate/dist/locale/zh_CN'
 import 'vant/lib/index.css'
 import '@/style/index.less'
+import CheckLogin from '@/utils/CheckLogin'
 
-Vue.use(Vant)
+// 注册插件 Checklogin.install(Vue)
+Vue.use(CheckLogin)
+
 // 时间过滤
 Vue.filter('fmtDate', fmtDate)
+
+Vue.use(Vant)
 // 配置插件VeeValidate
 Vue.use(VeeValidate, {
   // 文本框中触发验证的事件，默认是input
