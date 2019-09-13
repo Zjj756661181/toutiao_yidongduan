@@ -17,9 +17,9 @@
       <div slot="label">
         <p>{{ comment.content }}</p>
         <p>
-          <span>{{ comment.pubdate | fmtData }}</span>
-          ·
-          <span>回复{{ comment.reply_count }}</span>
+          <span>{{ comment.pubdate | fmtDate }}</span>
+          &nbsp;
+          <span @click="handleShowReplyList(comment)">回复{{ comment.reply_count }}</span>
         </p>
       </div>
     </van-cell>
@@ -38,7 +38,11 @@ export default {
     return {
       list: [],
       loading: false,
-      finished: false
+      finished: false,
+      // 获取评论数据的偏移量，值为评论id，表示从此id的数据向后取，不传表示从第一页开始读取数据
+      offset: null,
+      // 每页获取多少条数据
+      limit: 10
     }
   },
   methods: {
@@ -68,6 +72,12 @@ export default {
       } catch (error) {
         this.$toast.fail('加载评论失败')
       }
+    },
+    // 点击回复 调出回复弹层组件 -------------
+    handleShowReplyList (comment) {
+      this.$store.commit('setShowReplyList', true)
+      // console.log('123')
+      this.$store.commit('setCurrentComment', comment)
     }
   }
 }

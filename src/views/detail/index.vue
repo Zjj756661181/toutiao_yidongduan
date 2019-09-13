@@ -20,17 +20,27 @@
       <comment-list :isArticle="true" :id="article.art_id.toString()"></comment-list>
       <!-- 发布评论组件 -->
       <send-comment :isArticle="true"></send-comment>
+      <!-- 回复评论 弹层 组件 -->
+      <reply-list v-model="showReplyList"></reply-list>
     </div>
   </div>
 </template>
 
 <script>
+// 获取当前点击文章详情
 import { getArticleDetail } from '@/api/articles'
+// 作者信息 组件
 import AuthorInfo from './component/authorInfo'
+// 点赞和取消 组件
 import MoreArticle from './component/MoreArticle'
+// 评论列表 组件
 import CommentList from './component/CommentList'
+// 发布评论 组件
 import SendComment from './component/SendComment'
-
+// 评论弹层 组件
+import ReplyList from './component/ReplyList'
+import { mapState } from 'vuex'
+// import { mapMutations } from 'vuex'
 export default {
   name: 'detailIndex',
   props: ['id'],
@@ -48,11 +58,17 @@ export default {
     // 评论列表 组件
     CommentList,
     // 发布评论 组件
-    SendComment
+    SendComment,
+    // 评论弹层 组件
+    ReplyList
   },
   created () {
     // 渲染当前文章详情
     this.getArticles()
+  },
+  computed: {
+    ...mapState(['showReplyList'])
+    // ...mapMutations(['setShowReplyList'])
   },
   methods: {
     // 获取当前点击文章详情 ---------------------------------
