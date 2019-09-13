@@ -32,7 +32,7 @@ export default new Router({
     {
       path: '/follow', // 关注/粉丝
       name: 'follow',
-      component: () => import(/* webpackChunkName: "follow" */ '@/views/Follow.vue')
+      component: () => import(/* webpackChunkName: "follow" */ '@/views/follow/index.vue')
     },
     {
       path: '/userProfile', // 个人信息页
