@@ -12,10 +12,11 @@
 
 <script>
 import { sendComment } from '@/api/comment'
+import eventHub from '@/utils/eventHub'
 
 export default {
   name: 'SendComment',
-  props: ['isArticle'],
+  props: ['isArticle', 'target', 'artId'],
   data () {
     return {
       content: ''
@@ -34,10 +35,14 @@ export default {
       }
       // 发布评论const data =
       try {
-        await sendComment({
+        const data = await sendComment({
           target: this.target,
           content: this.content
         })
+        // 触发eventHub 发出事$emit 发布成功
+        eventHub.$emit('sendSuccess', data.new_obj)
+        // console.log(data)
+        // data.new_obj
         this.content = ''
       } catch (error) {
         this.$toast.fail('发送失败')

@@ -19,9 +19,9 @@
       <!-- 评论列表 -->
       <comment-list :isArticle="true" :id="article.art_id.toString()"></comment-list>
       <!-- 发布评论组件 -->
-      <send-comment :isArticle="true"></send-comment>
+      <send-comment :isArticle="true" :target="article.art_id.toString()"></send-comment>
       <!-- 回复评论 弹层 组件 -->
-      <reply-list v-model="showReplyList"></reply-list>
+      <reply-list v-model="showReplyList" :artId="id"></reply-list>
     </div>
   </div>
 </template>
@@ -43,6 +43,7 @@ import { mapState } from 'vuex'
 // import { mapMutations } from 'vuex'
 export default {
   name: 'detailIndex',
+  // 文章的id  SendComment需要[ReplyList中]
   props: ['id'],
   data () {
     return {

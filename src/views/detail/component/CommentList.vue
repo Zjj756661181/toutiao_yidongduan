@@ -29,6 +29,7 @@
 <script>
 import { getComment } from '@/api/comment'
 import { liking, unliking } from '@/api/articles'
+import eventHub from '@/utils/eventHub'
 
 export default {
   name: 'CommentList',
@@ -45,6 +46,15 @@ export default {
       // 每页获取多少条数据
       limit: 10
     }
+  },
+  created () {
+    // 注册评论列表 评论成功事件
+    eventHub.$on('sendSuccess', (obj) => {
+      //
+      if (this.isArticle === obj.isArticle) {
+        this.list.unshift(obj.comment)
+      }
+    })
   },
   methods: {
     // 点赞 取消点赞 -----------------------------------

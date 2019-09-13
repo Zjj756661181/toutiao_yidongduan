@@ -6,7 +6,9 @@
     :style="{ height: '80%' }"
     v-if="currentComment"
   >
+    <!-- 评论区 title -->
     <van-nav-bar :title="currentComment.reply_count + '条评论'" />
+
     <!-- 待评论区 -->
     <van-cell>
       <div slot="icon">
@@ -27,24 +29,38 @@
         </p>
       </div>
     </van-cell>
+
     <!-- 评论的回复列表 -->
     <h3>回复评论</h3>
     <comment-list :isArticle="false" :id="currentComment.com_id.toString()"></comment-list>
+
+    <!-- 发布组件 -->
+    <send-comment :isArticle="false" :target="currentComment.com_id.toString()" :artId="artId"></send-comment>
+
   </van-popup>
 </template>
 
 <script>
 import { mapState } from 'vuex'
 import CommentList from './CommentList'
+import SendComment from './SendComment'
+import eventHub from '@/utils/eventHub'
 
 export default {
   name: 'ReplyList',
-  props: ['value'],
+  props: ['value', 'artId'],
   computed: {
     ...mapState(['currentComment'])
   },
   components: {
-    CommentList
+    CommentList,
+    SendComment
+  },
+  created () {
+    eventHub.$on('sendSuccess', () => {
+      // 接收SendComment传出的事件 在回复 后边数量上相加
+      this.currentComment.reply_count++
+    })
   }
 }
 </script>
