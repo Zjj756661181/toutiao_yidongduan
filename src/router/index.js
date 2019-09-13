@@ -30,9 +30,9 @@ export default new Router({
       component: () => import(/* webpackChunkName: "login" */ '@/views/login.vue')
     },
     {
-      path: '/user-profile', // 个人信息页
-      name: 'user-profile',
-      component: () => import(/* webpackChunkName: "user-profile" */ '@/views/user-profile/index.vue')
+      path: '/userProfile', // 个人信息页
+      name: 'userProfile',
+      component: () => import(/* webpackChunkName: "user-profile" */ '@/views/userProfile/index.vue')
     },
     {
       path: '/Search', // 搜索页

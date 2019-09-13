@@ -1,0 +1,56 @@
+<template>
+  <div>
+    <van-nav-bar
+      title="个人信息"
+      right-text="保存"
+      left-arrow
+      @click-left="$router.back()"
+      @click-right="btnSave"
+    />
+    <van-cell-group>
+      <van-cell title="头像" is-link>
+        <div slot="default">
+          <img width="30" height="30" :src="userProfile.photo" alt="">
+        </div>
+      </van-cell>
+      <van-cell title="昵称" is-link :value="userProfile.name" />
+    </van-cell-group>
+    <van-cell-group>
+      <van-cell title="性别" is-link :value="userProfile.gender ? '女' : '男'" />
+      <van-cell title="生日" is-link :value="userProfile.birthday"/>
+    </van-cell-group>
+  </div>
+</template>
+
+<script>
+import { getUserProfile } from '@/api/user'
+
+export default {
+  name: 'userProfile',
+  data () {
+    return {
+      userProfile: {}
+    }
+  },
+  created () {
+    this.loadUserProfile()
+  },
+  methods: {
+    // 获取用户个人资料 ----------------------------
+    async loadUserProfile () {
+      try {
+        const data = await getUserProfile()
+        // console.log(data)
+        this.userProfile = data
+      } catch (error) {
+        this.$toast.fail('获取用户个人资料失败')
+      }
+    },
+    btnSave () {}
+  }
+}
+</script>
+
+<style>
+
+</style>

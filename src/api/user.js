@@ -43,3 +43,8 @@ export const unFollowUser = (id) => {
 export const getUserInfo = () => {
   return request.get('/app/v1_0/user')
 }
+
+// 获取用户的个人资料
+export const getUserProfile = () => {
+  return request.get('/app/v1_0/user/profile')
+}
