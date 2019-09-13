@@ -59,6 +59,14 @@ export default {
         message: '是否确认该图片作为头像'
       }).then(async () => {
         try {
+          // 加载提示
+          this.$toast.loading({
+            duration: 0, // 持续展示 toast
+            forbidClick: true, // 禁用背景点击
+            loadingType: 'spinner',
+            message: '正在上传...'
+          })
+
           const data = await UploadPhoto('photo', this.$refs.file.files[0])
           // 更改当前的头像
           console.log(data)
@@ -69,6 +77,9 @@ export default {
         } catch (error) {
           this.$toast.fail('头像上传成功')
         }
+
+        // 关闭加载提示
+        this.$toast.clear()
       }).catch(() => {
 
       })
