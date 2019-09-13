@@ -5,17 +5,17 @@
     <!-- tabs -->
     <van-tabs v-model="active" color="blue">
       <van-tab title="关注">
-        <user-list :type="type"></user-list>
+        <user-list :type="active"></user-list>
       </van-tab>
       <van-tab title="粉丝">
-        <user-list :type="type"></user-list>
+        <user-list :type="active"></user-list>
       </van-tab>
     </van-tabs>
   </div>
 </template>
 
 <script>
-import UserList from './component/UserList'
+import userList from './component/UserList'
 export default {
   name: 'Follow',
   data () {
@@ -25,8 +25,8 @@ export default {
       type: '1'
     }
   },
-  computed: {
-    UserList
+  components: {
+    userList
   },
   // keep-alive的钩子函数，当组件激活的时候执行
   activated () {
