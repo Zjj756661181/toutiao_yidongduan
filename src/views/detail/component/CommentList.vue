@@ -12,7 +12,7 @@
         <span>{{ comment.aut_name }}</span>
       </div>
       <div slot="default">
-        <van-button icon="like-o" size="mini" plain>赞</van-button>
+        <van-button @click="handleFabulous()" icon="like-o" size="mini" plain>赞</van-button>
       </div>
       <div slot="label">
         <p>{{ comment.content }}</p>
@@ -28,6 +28,7 @@
 
 <script>
 import { getComment } from '@/api/comment'
+import { liking, unliking } from '@/api/articles'
 
 export default {
   name: 'CommentList',
@@ -46,6 +47,30 @@ export default {
     }
   },
   methods: {
+    // 点赞 取消点赞 -----------------------------------
+    // 用户对文章的态度, -1: 无态度，0-不喜欢，1-点赞
+    async handleFabulous () {
+      // 检测是否登录 未登录 提醒 跳转登录
+      if (!this.$checkLogin()) {
+        return
+      }
+
+      try {
+        // 检测如用户对文章的态度 === 1 当前为点赞 状态
+        if (this.article.attitude === 1) {
+          // 取消点赞 通过文章id
+          await unliking(this.article.art_id)
+          // 取消点赞后 状态随之改变
+          this.article.attitude = -1
+        } else {
+          // 点赞
+          await liking(this.article.art_id)
+          this.article.attitude = 1
+        }
+      } catch (error) {
+        this.$toast.fail('操作失败')
+      }
+    },
     // 获取评论 列表 ------------------------
     async onLoad () {
       try {

@@ -6,8 +6,8 @@
     :style="{ height: '80%' }"
     v-if="currentComment"
   >
-    <!-- 待评论区 -->
     <van-nav-bar :title="currentComment.reply_count + '条评论'" />
+    <!-- 待评论区 -->
     <van-cell>
       <div slot="icon">
         <img class="avatar" :src="currentComment.aut_photo" alt />
@@ -23,21 +23,28 @@
         <p>
           <span>{{ currentComment.pubdate | fmtDate }}</span>
           &nbsp;
-          <span @click="handleShowReplyList">回复{{ currentComment.reply_count }}</span>
+          <span>回复{{ currentComment.reply_count }}</span>
         </p>
       </div>
     </van-cell>
+    <!-- 评论的回复列表 -->
+    <h3>回复评论</h3>
+    <comment-list :isArticle="false" :id="currentComment.com_id.toString()"></comment-list>
   </van-popup>
 </template>
 
 <script>
 import { mapState } from 'vuex'
+import CommentList from './CommentList'
 
 export default {
   name: 'ReplyList',
   props: ['value'],
   computed: {
     ...mapState(['currentComment'])
+  },
+  components: {
+    CommentList
   }
 }
 </script>
