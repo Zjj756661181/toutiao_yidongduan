@@ -38,3 +38,8 @@ export const FollowUser = (id) => {
 export const unFollowUser = (id) => {
   return request.delete(`/app/v1_0/user/followings/${id}`)
 }
+
+// 获取用户信息
+export const getUserInfo = () => {
+  return request.get('/app/v1_0/user')
+}
